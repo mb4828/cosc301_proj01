@@ -3,5 +3,4 @@
 #include "list.h"
 
 /* your list function definitions */
-//Test code for github
-test test
+printf("This is a github test");
