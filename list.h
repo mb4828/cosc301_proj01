@@ -3,8 +3,15 @@
 
 /* your list data structure declarations */
 
+struct node {
+	int n;
+	struct node *next;
+};
 
 /* your function declarations associated with the list */
 
+void list_insert(const int *i, struct node *head);
+
+void list_print(struct node *head);
 
 #endif // __LIST_H__
