@@ -9,7 +9,7 @@ void list_insert(const int i, struct node **head) {
 	newnode->n = i;
 	newnode->next = NULL;
 
-	if ( head == NULL ) {
+	if ( *head == NULL ) {
 		*head = newnode;
 	}
 	else if ((*head)->next == NULL) {
@@ -24,6 +24,10 @@ void list_insert(const int i, struct node **head) {
 	} else {
 		struct node *tmp = *head;
 		while (tmp != NULL) {
+			if (tmp->next == NULL) {
+				tmp->next = newnode;
+				break;
+			}
 			if (i >= tmp->n && i <= tmp->next->n) {
 				newnode->next = tmp->next;
 				tmp->next = newnode;

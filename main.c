@@ -86,17 +86,19 @@ int main(int argc, char **argv) {
 			// if check is still equal to 1, we have an integer so we can add it to the linked list
 			if (check==1) {
 				const int t = atoi(token);
-				printf("%i\n",t);
-				list_insert(t,head);
+				struct node **phead = &head;
+				list_insert(t,phead);
 			}
 
 			token = strtok(NULL,s);
 		}
 	}
 
+	printf("*** List Contents Begin ***\n");
 	list_print(head);
+	printf("*** List Contents End ***\n");
 
-    fclose(datafile);
-    return 0;
+	fclose(datafile);
+	return 0;
 }
 
