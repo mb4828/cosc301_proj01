@@ -4,29 +4,32 @@
 
 /* your list function definitions */
 
-void list_insert(const int i, struct node *head) {
+void list_insert(const int i, struct node **head) {
 	struct node *newnode = malloc(sizeof(struct node));
 	newnode->n = i;
 	newnode->next = NULL;
 
 	if ( head == NULL ) {
-		head = newnode;
-	} else if (head->next == NULL) {
-		if (i < head->n) {
-			newnode->next = head;
-			head = newnode;
-		} else {
-			head->next = newnode;
+		*head = newnode;
+	}
+	else if ((*head)->next == NULL) {
+		if (i < (*head)->n) {
+			newnode->next = *head;
+			*head = newnode;
+		}
+		else {
+			(*head)->next = newnode;
 		}
 
 	} else {
-		struct node *tmp = head;
+		struct node *tmp = *head;
 		while (tmp != NULL) {
 			if (i >= tmp->n && i <= tmp->next->n) {
 				newnode->next = tmp->next;
 				tmp->next = newnode;
 				break;
 			}
+			tmp = tmp->next;
 		}
 	}
 }

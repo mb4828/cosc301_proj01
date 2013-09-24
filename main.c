@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <ctype.h>
 
 #include "list.h"
 
@@ -26,7 +27,7 @@ int main(int argc, char **argv) {
         case 1:
             /* only one program argument (the program name) */ 
             /* just equate stdin with our datafile */
-            datafile = stdin;        
+            datafile = stdin;
             break;
 
         case 2:
@@ -48,10 +49,52 @@ int main(int argc, char **argv) {
      * you should be able to just read from datafile regardless 
      * whether it's stdin or a "real" file.
      */
+	char buffer[256];
+	struct node *head = NULL;
 
+	// read each line
+	while (fgets(buffer, 256, datafile) != NULL) {
+		const char s[2]= " ";
+		char *token;
+		token = strtok(buffer, s);
 
+		// tokenize each line and check each token for integers
+		while (token != NULL) {
 
+			// ignore comments and newline characters
+			if (strncmp(token, "#", 1)==0 || strcmp(token, "\n")==0) {
+				break;
+			}
 
+			// check first character for either a digit or negative sign
+			if (( token[0]<(int)'0' || token[0]>(int)'9' ) && token[0]!=(int)'-') {
+				break;
+			}
+
+			// check remaining characters for digits
+			int i=1;
+			int check=1;
+			int tlen=strlen(token);
+
+			for (; i < tlen ; i++) {
+				if (token[i]<(int)'0' || token[i]>(int)'9') {
+					check=0;
+					break;
+				}
+			}
+
+			// if check is still equal to 1, we have an integer so we can add it to the linked list
+			if (check==1) {
+				const int t = atoi(token);
+				printf("%i\n",t);
+				list_insert(t,head);
+			}
+
+			token = strtok(NULL,s);
+		}
+	}
+
+	list_print(head);
 
     fclose(datafile);
     return 0;
