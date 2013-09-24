@@ -5,25 +5,43 @@
 /* your list function definitions */
 
 void list_insert(const int i, struct node *head) {
-	if ( head == NULL ) {
-		// if the list is empty, malloc a new node and point head to it
-		struct node *newnode = malloc(sizeof(struct node));
-		newnode->n = i;
-		newnode->next = NULL;
+	struct node *newnode = malloc(sizeof(struct node));
+	newnode->n = i;
+	newnode->next = NULL;
 
+	if ( head == NULL ) {
 		head = newnode;
+	} else if (head->next == NULL) {
+		if (i < head->n) {
+			newnode->next = head;
+			head = newnode;
+		} else {
+			head->next = newnode;
+		}
+
 	} else {
-		// else, insert the node in the list in order from least to greatest
-		struct node *newnode = malloc(sizeof(struct node));
-		newnode->n = i;
-		
-		// go through the list and find where the node should be inserted
-		struct node *afterme = head;
-		struct node *beforeme = head;
-		while ( beforeme != NULL ) {
-			if ( beforeme->n >= i ) {
-			
+		struct node *tmp = head;
+		while (tmp != NULL) {
+			if (i >= tmp->n && i <= tmp->next->n) {
+				newnode->next = tmp->next;
+				tmp->next = newnode;
+				break;
 			}
 		}
+	}
+}
+
+void list_print(struct node *head) {
+	while (head != NULL){
+		printf("%i\n", head->n);
+		head = head->next;
+	}
+}
+
+void list_clear(struct node *list) {
+	while (list != NULL) {
+		struct node *tmp = list;
+		list = list->next;
+		free(tmp);
 	}
 }

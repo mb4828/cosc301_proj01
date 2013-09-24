@@ -10,8 +10,10 @@ struct node {
 
 /* your function declarations associated with the list */
 
-void list_insert(const int *i, struct node *head);
+void list_insert(const int i, struct node *head);
 
 void list_print(struct node *head);
+
+void list_clear(struct node *list);
 
 #endif // __LIST_H__
