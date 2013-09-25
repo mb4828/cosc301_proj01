@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 		printf("User time: %ld.%06ld\n", user.tv_sec, user.tv_usec);
 		printf("System time: %ld.%06ld\n", system.tv_sec, system.tv_usec);
 	} else {
-		printf("Time measurement error");
+		printf("Time measurement error\n");
 	}
 
 	list_clear(head);
