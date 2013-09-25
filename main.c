@@ -1,6 +1,10 @@
 /*
+ *  Project 1 - main.c
  *
- * author name, date, and other info here
+ *  Matthew Brauner
+ *  Professor Sommers
+ *  CS 301
+ *  September 25, 2013
  *
  */
 
@@ -10,6 +14,8 @@
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include "list.h"
 
@@ -20,6 +26,13 @@ void usage(char *program) {
 
 
 int main(int argc, char **argv) {
+	struct rusage usg;
+	struct timeval startsys, endsys, startusr, endusr;
+
+	getrusage(RUSAGE_SELF, &usg);
+	startsys = usg.ru_stime;
+	startusr = usg.ru_utime;
+
     FILE *datafile = NULL;
 
     /* find out how we got invoked and deal with it */
@@ -45,12 +58,9 @@ int main(int argc, char **argv) {
             usage(argv[0]);
     }
 
-    /* 
-     * you should be able to just read from datafile regardless 
-     * whether it's stdin or a "real" file.
-     */
 	char buffer[256];
 	struct node *head = NULL;
+	struct node **phead = &head;
 
 	// read each line
 	while (fgets(buffer, 256, datafile) != NULL) {
@@ -67,27 +77,26 @@ int main(int argc, char **argv) {
 			}
 
 			// check first character for either a digit or negative sign
-			if (( token[0]<(int)'0' || token[0]>(int)'9' ) && token[0]!=(int)'-') {
-				break;
-			}
+			if (( token[0]>=(int)'0' && token[0]<=(int)'9' ) || token[0]==(int)'-') {
 
-			// check remaining characters for digits
-			int i=1;
-			int check=1;
-			int tlen=strlen(token);
 
-			for (; i < tlen ; i++) {
-				if (token[i]<(int)'0' || token[i]>(int)'9') {
-					check=0;
-					break;
+				// check remaining characters for digits
+				int i=1;
+				int check=1;
+				int tlen=strlen(token);
+
+				for (; i < tlen ; i++) {
+					if (token[i]<(int)'0' || token[i]>(int)'9') {
+						check=0;
+						break;
+					}
 				}
-			}
 
-			// if check is still equal to 1, we have an integer so we can add it to the linked list
-			if (check==1) {
-				const int t = atoi(token);
-				struct node **phead = &head;
-				list_insert(t,phead);
+				// if check is still equal to 1, we have an integer so we can add it to the linked list
+				if (check==1) {
+					const int t = atoi(token);
+					list_insert(t,phead);
+				}
 			}
 
 			token = strtok(NULL,s);
@@ -98,6 +107,14 @@ int main(int argc, char **argv) {
 	list_print(head);
 	printf("*** List Contents End ***\n");
 
+	getrusage(RUSAGE_SELF, &usg);
+	endsys = usg.ru_stime;
+	endusr = usg.ru_utime;
+
+	printf("User time: %ld.%06ld\n", endusr.tv_sec-startusr.tv_sec, endusr.tv_usec-startusr.tv_usec);
+	printf("System time: %ld.%06ld\n", endsys.tv_sec-startsys.tv_sec, endsys.tv_usec-startsys.tv_usec);
+
+	list_clear(head);
 	fclose(datafile);
 	return 0;
 }

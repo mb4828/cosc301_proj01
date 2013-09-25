@@ -40,7 +40,7 @@ void list_insert(const int i, struct node **head) {
 
 void list_print(struct node *head) {
 	while (head != NULL){
-		printf("%i\n", head->n);
+		printf("%i\n",head->n);
 		head = head->next;
 	}
 }
