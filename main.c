@@ -27,11 +27,7 @@ void usage(char *program) {
 
 int main(int argc, char **argv) {
 	struct rusage usg;
-	struct timeval startsys, endsys, startusr, endusr;
-
-	getrusage(RUSAGE_SELF, &usg);
-	startsys = usg.ru_stime;
-	startusr = usg.ru_utime;
+	struct timeval user, system;
 
     FILE *datafile = NULL;
 
@@ -107,12 +103,16 @@ int main(int argc, char **argv) {
 	list_print(head);
 	printf("*** List Contents End ***\n");
 
-	getrusage(RUSAGE_SELF, &usg);
-	endsys = usg.ru_stime;
-	endusr = usg.ru_utime;
+	int rv = getrusage(RUSAGE_SELF, &usg);
+	system = usg.ru_stime;
+	user = usg.ru_utime;
 
-	printf("User time: %ld.%06ld\n", endusr.tv_sec-startusr.tv_sec, endusr.tv_usec-startusr.tv_usec);
-	printf("System time: %ld.%06ld\n", endsys.tv_sec-startsys.tv_sec, endsys.tv_usec-startsys.tv_usec);
+	if (rv == 0) {
+		printf("User time: %ld.%06ld\n", user.tv_sec, user.tv_usec);
+		printf("System time: %ld.%06ld\n", system.tv_sec, system.tv_usec);
+	} else {
+		printf("Time measurement error");
+	}
 
 	list_clear(head);
 	fclose(datafile);

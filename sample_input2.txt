@@ -1,0 +1,10 @@
+
+200000 99.9 875 364279 my sharona 45 #this is a comment
+this all should be ignored because it is invaliddddddd
+
+
+34 46 298 724 365 		#hehehe comment
+42				# haaaaaaaaaaaaa comment
+
+la la la
+5 
