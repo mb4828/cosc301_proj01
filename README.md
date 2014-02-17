@@ -1,6 +1,5 @@
-Operating Systems - Project 1
+CS 301: Project 1
 ==============
-Professor Sommers<br />
-Colgate University - COSC 301<br />
+Operating Systems<br />
 
 Objective: Create a "list" type in C using pointers
